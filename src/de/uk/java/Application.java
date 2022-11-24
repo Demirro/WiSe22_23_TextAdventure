@@ -8,9 +8,7 @@ public class Application {
 	public static void main(String[] args) throws InterruptedException {
 		
 		// Variablen für Spielende
-		int playerHealth = 100;
-		int playerStrength = 1;
-		String playerName = "";
+		Player player = new Player(100, 1);
 		
 		// Scanner initialisieren für das einlesen des User Inputs
 		Scanner input = new Scanner(System.in);
@@ -18,7 +16,7 @@ public class Application {
 		// Start des Spiels, Namen definieren
 		System.out.println("Willkommen im TextAdventure");
 		System.out.println("Wähle einen Namen bevor das Spiel anfängt:");
-		playerName = input.nextLine(); // auf User-Input (neue Zeile) warten
+		player.setName(input.nextLine()); // auf User-Input (neue Zeile) warten
 		
 		// Game-Loop starten, läuft ewig, es sei den man gibt exit ein
 		gameloop : while (true) {
@@ -34,31 +32,30 @@ public class Application {
 			 */
 			switch (command.toLowerCase()) {
 			case "story":
-				System.out.println(playerName + " begibt sich auf eine schwierige Reise!");
+				System.out.println(player.getName() + " begibt sich auf eine schwierige Reise!");
 				break;
 			case "show player":
-				System.out.printf("Name: %s\nHealth: %s\nStrength: %s\n", playerName, playerHealth, playerStrength);
+				System.out.printf("Name: %s\nHealth: %s\nStrength: %s\n", player.getName(), player.getHealth(), player.getStrength());
 				break;
 			case "attack":
-				int enemyHealth = 10;
-				int enemyStrength = 2;
+				Enemy enemy = new Enemy(10, 2);
 				attackLoop : while (true) {
-					if (enemyHealth <= 0) {
+					if (enemy.getHealth() <= 0) {
 						System.out.println("Der Gegner ist gestorben. Du hast gewonnen");
 						break attackLoop;
-					} else if (playerHealth <= 0) {
+					} else if (player.getHealth() <= 0) {
 						System.out.println("Du bist gestorben");
 						break attackLoop;
 					}
-					System.out.printf("Du greifst mit %s Stärke an.\n", playerStrength);
-					enemyHealth -= playerStrength;
+					System.out.printf("Du greifst mit %s Stärke an.\n", player.getStrength());
+					enemy.takeDamage(player.getStrength());
 					TimeUnit.MILLISECONDS.sleep(500);
-					System.out.printf("Der Gegner hat noch %s Leben.\n", enemyHealth);
+					System.out.printf("Der Gegner hat noch %s Leben.\n", enemy.getHealth());
 					TimeUnit.MILLISECONDS.sleep(1000);
-					System.out.printf("Der Gegner greift dich mit %s Stärke an.\n", enemyStrength);
+					System.out.printf("Der Gegner greift dich mit %s Stärke an.\n", enemy.getStrength());
 					TimeUnit.MILLISECONDS.sleep(500);
-					playerHealth -= enemyStrength;
-					System.out.printf("Du hast noch %s Leben.\n", playerHealth);
+					player.takeDamage(enemy.getStrength());
+					System.out.printf("Du hast noch %s Leben.\n", player.getHealth());
 					TimeUnit.MILLISECONDS.sleep(1000);
 				}
 				break;
