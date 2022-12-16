@@ -1,24 +1,22 @@
 package de.uk.java;
 
+import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class Application {
 
-	public static void main(String[] args) throws InterruptedException {
-		
-		// Variablen für Spielende
-		int playerHealth = 100;
-		int playerStrength = 1;
-		String playerName = "";
-		
+	public static void main(String[] args) throws InterruptedException {	
 		// Scanner initialisieren für das einlesen des User Inputs
+		
+		Player player = new Player();
+		
 		Scanner input = new Scanner(System.in);
 
 		// Start des Spiels, Namen definieren
 		System.out.println("Willkommen im TextAdventure");
 		System.out.println("Wähle einen Namen bevor das Spiel anfängt:");
-		playerName = input.nextLine(); // auf User-Input (neue Zeile) warten
+		player.setName(input.nextLine()); // auf User-Input (neue Zeile) warten
 		
 		// Game-Loop starten, läuft ewig, es sei den man gibt exit ein
 		gameloop : while (true) {
@@ -34,31 +32,43 @@ public class Application {
 			 */
 			switch (command.toLowerCase()) {
 			case "story":
-				System.out.println(playerName + " begibt sich auf eine schwierige Reise!");
+				System.out.println(player.getName() + " begibt sich auf eine schwierige Reise!");
 				break;
 			case "show player":
-				System.out.printf("Name: %s\nHealth: %s\nStrength: %s\n", playerName, playerHealth, playerStrength);
+				System.out.printf("Name: %s\nHealth: %s\nStrength: %s\n", player.getName(), player.getHealth(), player.getStrength());
+				break;
+			case "heal":
+				player.usePotion(new StrengthPotion(2));
+				player.usePotion(new HealthPotion(10));
+				break;
+			case "throw healing potion":
+				HealthPotion hp = new HealthPotion(10);
+				Ork ork1 = new Ork((short)1);
+				player.throw1(hp, ork1);
+				System.out.println(ork1.getHealth());
+				player.throw1(new Bomb(), ork1);
+				System.out.println(ork1.getHealth());
 				break;
 			case "attack":
-				int enemyHealth = 10;
-				int enemyStrength = 2;
+				Ork ork = new Ork((short)20);
+				System.out.println(ork.getHealth() + " " + ork.getStrength());
 				attackLoop : while (true) {
-					if (enemyHealth <= 0) {
+					if (ork.getHealth() <= 0) {
 						System.out.println("Der Gegner ist gestorben. Du hast gewonnen");
 						break attackLoop;
-					} else if (playerHealth <= 0) {
+					} else if (player.getHealth() <= 0) {
 						System.out.println("Du bist gestorben");
 						break attackLoop;
 					}
-					System.out.printf("Du greifst mit %s Stärke an.\n", playerStrength);
-					enemyHealth -= playerStrength;
+					System.out.printf("Du greifst mit %s Stärke an.\n", player.getStrength());
+					ork.takeDamage(player.getStrength());
 					TimeUnit.MILLISECONDS.sleep(500);
-					System.out.printf("Der Gegner hat noch %s Leben.\n", enemyHealth);
+					System.out.printf("Der Gegner hat noch %s Leben.\n", ork.getHealth());
 					TimeUnit.MILLISECONDS.sleep(1000);
-					System.out.printf("Der Gegner greift dich mit %s Stärke an.\n", enemyStrength);
+					System.out.printf("Der Gegner greift dich mit %s Stärke an.\n", ork.getStrength());
 					TimeUnit.MILLISECONDS.sleep(500);
-					playerHealth -= enemyStrength;
-					System.out.printf("Du hast noch %s Leben.\n", playerHealth);
+					player.takeDamage(ork.getStrength());
+					System.out.printf("Du hast noch %s Leben.\n", player.getHealth());
 					TimeUnit.MILLISECONDS.sleep(1000);
 				}
 				break;
