@@ -1,4 +1,6 @@
-package de.uk.java;
+package de.uk.java.entity.item;
+
+import de.uk.java.entity.Entity;
 
 public interface IThrowable {
 		

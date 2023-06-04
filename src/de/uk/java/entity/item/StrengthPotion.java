@@ -1,4 +1,7 @@
-package de.uk.java;
+package de.uk.java.entity.item;
+
+import de.uk.java.entity.Entity;
+import de.uk.java.entity.item.Potion;
 
 public class StrengthPotion extends Potion {
 
@@ -8,9 +11,8 @@ public class StrengthPotion extends Potion {
 		this.strengthBoost = strengthBoost;
 	}
 	@Override
-	public void powerUp(Entity entity) {
+	public void useItem(Entity entity) {
 		entity.setStrength(entity.getStrength() + strengthBoost);
-		
 	}
 
 	@Override

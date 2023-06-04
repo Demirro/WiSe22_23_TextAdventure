@@ -1,4 +1,6 @@
-package de.uk.java;
+package de.uk.java.entity.item;
+
+import de.uk.java.entity.Entity;
 
 public class HealthPotion extends Potion {
 	
@@ -15,13 +17,13 @@ public class HealthPotion extends Potion {
 	}
 
 	@Override
-	public void powerUp(Entity entity) {
+	public void useItem(Entity entity) {
 		entity.setHealth(entity.getHealth() + healValue);
 	}
 
 	@Override
 	public void getThrown(Entity entity) {
-		powerUp(entity);
+		useItem(entity);
 	}
 
 }
